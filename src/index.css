@@ -1,0 +1,37 @@
+body {
+    width: 500px;
+    margin-left: 0.5em;
+}
+
+div {
+    margin-bottom: 3px
+}
+
+h1 {
+    color: green;
+    font-style:italic;
+}
+
+.error, .notification {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0.5em 0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    box-shadow: 0px 1px 5px 1px #EA2AFC;
+    background-repeat: no-repeat;
+    background-position: right;
+    padding: 0.6em;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.notification {
+    color: rgb(0, 0, 0);
+    background-color: rgb(110, 252, 141);
+    background-image: url('https://i.imgur.com/Q9BGTuy.png');
+}
+.error {
+            color: #D8000C;
+			background-color: #FFBABA;
+			background-image: url('https://i.imgur.com/GnyDvKN.png'); 
+}

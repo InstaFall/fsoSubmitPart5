@@ -58,9 +58,12 @@ const App = () => {
     e.preventDefault()
     const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
     blogService.setToken(loggedUser.token)
-
     try {
     const response = await blogService.createBlog(newBlog)
+    setNotification({...notification, message: `a new blog, ${response.title} by ${response.author} is added!`})
+    setTimeout(() => {
+      setNotification({...notification, message: null})
+    },5000)
     setBlogs([...blogs, response])
     setNewBlog({title:"",author:"",url:""})
     } catch (exception) {
@@ -79,6 +82,7 @@ const App = () => {
   }
   return (
     <div>
+      <Notification notification={notification} />
       <h2>blogs</h2>
       <Logout user={user} setUser={setUser} />
       <NewBlog newBlog={newBlog} setNewBlog={setNewBlog} handleNewBlogSubmit={handleNewBlogSubmit} />
