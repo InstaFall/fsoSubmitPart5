@@ -5,6 +5,7 @@ import loginService from './services/logins'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Logout from './components/Logout'
+import NewBlog from './components/NewBlog'
 
 
 const App = () => {
@@ -13,6 +14,12 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({ error: false, message: null })
+  const [newBlog, setNewBlog] = useState(
+    {
+      title: "",
+      author: "",
+      url: ""
+    })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -29,7 +36,7 @@ const App = () => {
     }
   }, [])
 
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault()
     try {
       const response = await loginService.login({ username, password })
@@ -46,12 +53,27 @@ const App = () => {
       setPassword("")
     }
   }
+
+  const handleNewBlogSubmit = async (e) => {
+    e.preventDefault()
+    const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
+    blogService.setToken(loggedUser.token)
+
+    try {
+    const response = await blogService.createBlog(newBlog)
+    setBlogs([...blogs, response])
+    setNewBlog({title:"",author:"",url:""})
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
         <Notification notification={notification} />
         <h2>Log in</h2>
-        <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleSubmit={handleSubmit} />
+        <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLoginSubmit={handleLoginSubmit} />
       </div>
     )
   }
@@ -59,6 +81,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Logout user={user} setUser={setUser} />
+      <NewBlog newBlog={newBlog} setNewBlog={setNewBlog} handleNewBlogSubmit={handleNewBlogSubmit} />
       <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />

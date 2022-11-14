@@ -1,7 +1,7 @@
 const LoginForm = (props) => {
-    const { handleSubmit, username, setUsername, password, setPassword } = props
+    const { handleLoginSubmit, username, setUsername, password, setPassword } = props
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLoginSubmit}>
             <div>
                 username: <input type="text" name="Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
             </div>
