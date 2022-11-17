@@ -14,12 +14,7 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({ error: false, message: null })
-  const [newBlog, setNewBlog] = useState(
-    {
-      title: "",
-      author: "",
-      url: ""
-    })
+
 
   const ref = useRef()
 
@@ -56,18 +51,16 @@ const App = () => {
     }
   }
 
-  const handleNewBlogSubmit = async (e) => {
-    e.preventDefault()
+  const addBlog = async (blogObject) => {
     const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
     blogService.setToken(loggedUser.token)
     try {
-      const response = await blogService.createBlog(newBlog)
+      const response = await blogService.createBlog(blogObject)
       setNotification({ ...notification, message: `a new blog, ${response.title} by ${response.author} is added!` })
       setTimeout(() => {
         setNotification({ ...notification, message: null })
       }, 5000)
       setBlogs([...blogs, response])
-      setNewBlog({ title: "", author: "", url: "" })
       ref.current.toggleVisible()
     } catch (exception) {
       console.log(exception)
@@ -90,8 +83,8 @@ const App = () => {
       <Notification notification={notification} />
       <h2>blogs</h2>
       <Logout user={user} setUser={setUser} />
-      <Toggleable label="add"  ref={ref}>
-      <NewBlog newBlog={newBlog} setNewBlog={setNewBlog} handleNewBlogSubmit={handleNewBlogSubmit} />
+      <Toggleable label="add" ref={ref}>
+        <NewBlog addBlog={addBlog} />
       </Toggleable>
       <div>
         {blogs.map(blog =>

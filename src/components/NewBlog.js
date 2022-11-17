@@ -1,5 +1,25 @@
+import { useState } from "react"
+import blogService from "../services/blogs"
+
 const NewBlog = props => {
-    const {newBlog, setNewBlog, handleNewBlogSubmit} = props
+    const [newBlog, setNewBlog] = useState(
+        {
+          title: "",
+          author: "",
+          url: ""
+        })
+    const {addBlog} = props
+
+    const handleNewBlogSubmit = (e) => {
+        e.preventDefault()
+        addBlog(newBlog)
+        setNewBlog({
+            title: "",
+            author: "",
+            url: ""
+          })
+      }
+    
     return (
         <form onSubmit={handleNewBlogSubmit}>
             <h3>Create new blog</h3>
