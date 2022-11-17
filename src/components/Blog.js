@@ -1,17 +1,19 @@
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, likeBlog }) => {
   const [view, setView] = useState(false)
   const toggleView = () => {
     setView(!view)
   }
+  
   return view ?
     <ul className="fullview">
       <li>Title: {blog.title} <button onClick={toggleView}>hide</button></li>
       <li>Author: {blog.author}</li>
       <li>Url: {blog.url}</li>
-      <li>Likes: {blog.likes} <button>like</button></li>
+      <li>Likes: {blog.likes} <button onClick={()=> likeBlog(blog)}>like</button></li>
       <li>id: {blog.id}</li>
+      <li>User: {blog.user.username}</li>
     </ul>
     :
     <div>

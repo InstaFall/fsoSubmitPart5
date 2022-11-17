@@ -67,6 +67,12 @@ const App = () => {
     }
   }
 
+  const likeBlog = async (blog) => {
+    const updatedBlog = {...blog, likes: blog.likes +1}
+    const response = await blogService.updateBlog(updatedBlog,updatedBlog.id)
+    setBlogs(blogs.map((el) => el.id === updatedBlog.id ? response : el))
+  }
+
   if (user === null) {
     return (
       <div>
@@ -88,7 +94,7 @@ const App = () => {
       </Toggleable>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
         )}
       </div>
     </div>
