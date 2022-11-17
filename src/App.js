@@ -10,8 +10,8 @@ import Toggleable from './components/Toggleable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({ error: false, message: null })
   const ref = useRef()
@@ -27,7 +27,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUser = window.localStorage.getItem("loggedUser")
+    const loggedUser = window.localStorage.getItem('loggedUser')
     if (loggedUser) {
       const parsedUser = JSON.parse(loggedUser)
       setUser(parsedUser)
@@ -40,21 +40,21 @@ const App = () => {
     try {
       const response = await loginService.login({ username, password })
       setUser(response)
-      window.localStorage.setItem("loggedUser", JSON.stringify(response))
-      setUsername("")
-      setPassword("")
+      window.localStorage.setItem('loggedUser', JSON.stringify(response))
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      setNotification({ error: true, message: "Invalid credentials!" })
+      setNotification({ error: true, message: 'Invalid credentials!' })
       setTimeout(() => {
         setNotification({ error: false, message: null })
       }, 3000)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     }
   }
 
   const addBlog = async (blogObject) => {
-    const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
+    const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'))
     blogService.setToken(loggedUser.token)
     try {
       const response = await blogService.createBlog(blogObject)
@@ -77,7 +77,7 @@ const App = () => {
 
   const deleteBlog = async (blogObject) => {
     if (window.confirm(`Blog ${blogObject.title} by ${blogObject.author} will be removed. Do you wish to continue?`)) {
-      const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
+      const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'))
       blogService.setToken(loggedUser.token)
       try {
         await blogService.deleteBlog(blogObject.id)
