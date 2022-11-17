@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/logins'
@@ -6,7 +6,7 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Logout from './components/Logout'
 import NewBlog from './components/NewBlog'
-
+import Toggleable from './components/Toggleable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,6 +20,8 @@ const App = () => {
       author: "",
       url: ""
     })
+
+  const ref = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -59,13 +61,14 @@ const App = () => {
     const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
     blogService.setToken(loggedUser.token)
     try {
-    const response = await blogService.createBlog(newBlog)
-    setNotification({...notification, message: `a new blog, ${response.title} by ${response.author} is added!`})
-    setTimeout(() => {
-      setNotification({...notification, message: null})
-    },5000)
-    setBlogs([...blogs, response])
-    setNewBlog({title:"",author:"",url:""})
+      const response = await blogService.createBlog(newBlog)
+      setNotification({ ...notification, message: `a new blog, ${response.title} by ${response.author} is added!` })
+      setTimeout(() => {
+        setNotification({ ...notification, message: null })
+      }, 5000)
+      setBlogs([...blogs, response])
+      setNewBlog({ title: "", author: "", url: "" })
+      ref.current.toggleVisible()
     } catch (exception) {
       console.log(exception)
     }
@@ -76,7 +79,9 @@ const App = () => {
       <div>
         <Notification notification={notification} />
         <h2>Log in</h2>
-        <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLoginSubmit={handleLoginSubmit} />
+        <Toggleable label="log in">
+          <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLoginSubmit={handleLoginSubmit} />
+        </Toggleable>
       </div>
     )
   }
@@ -85,7 +90,9 @@ const App = () => {
       <Notification notification={notification} />
       <h2>blogs</h2>
       <Logout user={user} setUser={setUser} />
+      <Toggleable label="add"  ref={ref}>
       <NewBlog newBlog={newBlog} setNewBlog={setNewBlog} handleNewBlogSubmit={handleNewBlogSubmit} />
+      </Toggleable>
       <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
