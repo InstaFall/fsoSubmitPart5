@@ -14,13 +14,15 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({ error: false, message: null })
-
-
   const ref = useRef()
+
+  const sortBlogsByLikes = (blogArray) => {
+    return [...blogArray].sort((a,b) => b.likes - a.likes)
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(sortBlogsByLikes(blogs))
     )
   }, [])
 
@@ -60,7 +62,7 @@ const App = () => {
       setTimeout(() => {
         setNotification({ ...notification, message: null })
       }, 5000)
-      setBlogs([...blogs, response])
+      setBlogs(sortBlogsByLikes([...blogs, response]))
       ref.current.toggleVisible()
     } catch (exception) {
       console.log(exception)
@@ -70,7 +72,7 @@ const App = () => {
   const likeBlog = async (blog) => {
     const updatedBlog = {...blog, likes: blog.likes +1}
     const response = await blogService.updateBlog(updatedBlog,updatedBlog.id)
-    setBlogs(blogs.map((el) => el.id === updatedBlog.id ? response : el))
+    setBlogs(sortBlogsByLikes(blogs.map((el) => el.id === updatedBlog.id ? response : el)))
   }
 
   if (user === null) {
