@@ -17,7 +17,7 @@ const App = () => {
   const ref = useRef()
 
   const sortBlogsByLikes = (blogArray) => {
-    return [...blogArray].sort((a,b) => b.likes - a.likes)
+    return [...blogArray].sort((a, b) => b.likes - a.likes)
   }
 
   useEffect(() => {
@@ -70,9 +70,26 @@ const App = () => {
   }
 
   const likeBlog = async (blog) => {
-    const updatedBlog = {...blog, likes: blog.likes +1}
-    const response = await blogService.updateBlog(updatedBlog,updatedBlog.id)
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    const response = await blogService.updateBlog(updatedBlog, updatedBlog.id)
     setBlogs(sortBlogsByLikes(blogs.map((el) => el.id === updatedBlog.id ? response : el)))
+  }
+
+  const deleteBlog = async (blogObject) => {
+    if (window.confirm(`Blog ${blogObject.title} by ${blogObject.author} will be removed. Do you wish to continue?`)) {
+      const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
+      blogService.setToken(loggedUser.token)
+      try {
+        await blogService.deleteBlog(blogObject.id)
+        setNotification({ ...notification, message: `Blog ${blogObject.title} by ${blogObject.author} is deleted!` })
+        setTimeout(() => {
+          setNotification({ ...notification, message: null })
+        }, 3000)
+        setBlogs(sortBlogsByLikes(blogs.filter((el) => el.id !== blogObject.id)))
+      } catch (exception) {
+        console.log(exception)
+      }
+    }
   }
 
   if (user === null) {
@@ -96,7 +113,7 @@ const App = () => {
       </Toggleable>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} deleteBlog={deleteBlog} />
         )}
       </div>
     </div>
