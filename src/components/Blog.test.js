@@ -38,7 +38,7 @@ test('Blog url and likes are displayed after clicking show', async () => {
 test('Event handler for likes is called twice if the like button is clicked twice', async () => {
   const user = userEvent.setup()
   const likeHandler = jest.fn()
-  const container = render(<Blog blog={testBlog} likeBlog={likeHandler} />).container
+  render(<Blog blog={testBlog} likeBlog={likeHandler} />).container
   const viewButton = screen.getByText('view')
   await user.click(viewButton)
 

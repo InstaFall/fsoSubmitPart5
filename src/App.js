@@ -69,6 +69,8 @@ const App = () => {
     }
   }
 
+
+
   const likeBlog = async (blog) => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 }
     const response = await blogService.updateBlog(updatedBlog, updatedBlog.id)
