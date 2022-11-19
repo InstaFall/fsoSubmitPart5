@@ -5,12 +5,12 @@ const LoginForm = (props) => {
   return (
     <form onSubmit={handleLoginSubmit}>
       <div>
-                username: <input type="text" name="Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
+                username: <input id="username" type="text" name="Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
       </div>
       <div>
-                password: <input type="password" name="Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                password: <input id="password" type="password" name="Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
       </div>
-      <button type="submit">login</button>
+      <button id="login-button" type="submit">login</button>
     </form>
   )
 }
