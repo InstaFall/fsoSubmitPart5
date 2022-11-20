@@ -100,5 +100,26 @@ describe('Blog app', function() {
       })
     })
 
+    it.only('blogs are sorted by likes', () => {
+      const secondBlog = {
+        title: 'This will move up after liking',
+        author: 'Author Second',
+        url: 'http://example.org'
+      }
+      cy.addBlog(newBlog)
+      cy.addBlog(secondBlog)
+      cy.get('.simpleview').eq(0).contains('view').click()
+      cy.contains('view').click()
+      cy.get('.fullview').eq(0).contains('like').click() //First blog has 1 likes
+      cy.wait(300)
+      cy.get('.fullview').eq(1).contains('like').click() //Second blog has 1 likes
+      cy.wait(300)
+      cy.get('.fullview').eq(1).contains('like').click() //Second blog has 2 likes
+      cy.wait(300)
+      cy.get('.fullview').eq(0).should('contain','This will move up after liking')
+      cy.get('.fullview').eq(1).should('contain','This blog is added by test')
+    })
   })
+
+
 })

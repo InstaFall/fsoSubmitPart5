@@ -17,7 +17,7 @@ const Blog = ({ username, blog, likeBlog, deleteBlog }) => {
       {username === blog.user.username && <button onClick={() => deleteBlog(blog)}>delete</button>}
     </ul >
     :
-    <div>
+    <div className="simpleview">
       <b>{blog.title}</b> by {blog.author} <button onClick={toggleView}>view</button>
     </div>
 }
