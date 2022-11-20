@@ -6,7 +6,7 @@ describe('Blog app', function() {
       password: 'uncrackable'
     }
     cy.request('POST','http://localhost:3003/api/testing/reset')
-    cy.request('POST','http://localhost:3003/api/users', user)
+      .then(() => cy.request('POST','http://localhost:3003/api/users', user))
     cy.visit('http://localhost:3000')
   })
 
@@ -39,12 +39,27 @@ describe('Blog app', function() {
     })
   })
 
-  /* describe('when logged in', function() {
+  describe('when logged in', function() {
     beforeEach(function() {
       cy.contains('log in').click()
       cy.get('#username').type('phenomenal')
       cy.get('#password').type('uncrackable')
       cy.get('#login-button').click()
     })
-  }) */
+
+    it('a blog can be added', () => {
+      const newBlog = {
+        title: 'This blog is added by test',
+        author: 'Test Author',
+        url: 'http://example.org'
+      }
+      cy.contains('add').click()
+      cy.get('input[name="title"]').type(newBlog.title)
+      cy.get('input[name="author"]').type(newBlog.author)
+      cy.get('input[name="url"]').type(newBlog.url)
+      cy.contains('create').click()
+
+      cy.contains('This blog is added by test')
+    })
+  })
 })
