@@ -6,7 +6,7 @@ const Logout = (props) => {
   }
   return (
     <div>
-      <b>{user.username}</b> logged in <button onClick={handleLogout}>Log out</button>
+      <b>{user.username}</b> logged in <button onClick={handleLogout}>log out</button>
     </div>
   )
 }

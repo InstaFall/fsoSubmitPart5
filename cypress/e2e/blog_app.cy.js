@@ -62,13 +62,43 @@ describe('Blog app', function() {
       cy.contains('This blog is added by test')
     })
 
-    it('a blog can be liked', () => {
-      cy.addBlog(newBlog)
-      cy.contains('This blog is added by test')
-        .parent().contains('view').click()
-      cy.contains('This blog is added by test').parent().contains('Likes: 0')
-      cy.contains('This blog is added by test').parent().contains('like').click()
-      cy.contains('This blog is added by test').parent().contains('Likes: 1')
+    describe('and a blog is present', () => {
+      beforeEach(() => {
+        cy.addBlog(newBlog)
+      })
+      it('delete button is present when user is correct', () => {
+        cy.contains('view').click()
+        cy.contains('delete')
+      })
+
+      it('delete button is not present when user is different', () => {
+        cy.request('POST', 'http://localhost:3003/api/users', { username: 'second', password: 'password' })
+        cy.contains('log out').click()
+        cy.request('POST', 'http://localhost:3003/api/login', { username: 'second', password: 'password' })
+          .then((res) => {
+            localStorage.setItem('loggedUser', JSON.stringify(res.body))
+            cy.visit('http://localhost:3000')
+          })
+        cy.contains('view').click()
+        cy.contains('delete').should('not.exist')
+      })
+
+      it('blog can be liked', () => {
+        cy.contains('This blog is added by test')
+          .parent().contains('view').click()
+        cy.contains('This blog is added by test').parent().contains('Likes: 0')
+        cy.contains('This blog is added by test').parent().contains('like').click()
+        cy.contains('This blog is added by test').parent().contains('Likes: 1')
+      })
+
+      it('blog can be deleted', () => {
+        cy.contains('This blog is added by test')
+          .parent().contains('view').click()
+        cy.contains('This blog is added by test').parent().contains('delete').click()
+        cy.contains(' is deleted!')
+        cy.contains('li','This blog is added by test').should('not.exist')
+      })
     })
+
   })
 })
