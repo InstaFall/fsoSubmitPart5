@@ -5,10 +5,13 @@ describe('Blog app', function() {
       username: 'phenomenal',
       password: 'uncrackable'
     }
+
     cy.request('POST','http://localhost:3003/api/testing/reset')
-      .then(() => cy.request('POST','http://localhost:3003/api/users', user))
-    cy.visit('http://localhost:3000')
+      .then(() => {
+        cy.request('POST','http://localhost:3003/api/users', user)
+        cy.visit('http://localhost:3000')})
   })
+
 
   it('front page can be opened', function() {
     cy.contains('log in')
@@ -41,18 +44,15 @@ describe('Blog app', function() {
 
   describe('when logged in', function() {
     beforeEach(function() {
-      cy.contains('log in').click()
-      cy.get('#username').type('phenomenal')
-      cy.get('#password').type('uncrackable')
-      cy.get('#login-button').click()
+      cy.login({ username:'phenomenal', password: 'uncrackable' })
     })
+    const newBlog = {
+      title: 'This blog is added by test',
+      author: 'Test Author',
+      url: 'http://example.org'
+    }
 
     it('a blog can be added', () => {
-      const newBlog = {
-        title: 'This blog is added by test',
-        author: 'Test Author',
-        url: 'http://example.org'
-      }
       cy.contains('add').click()
       cy.get('input[name="title"]').type(newBlog.title)
       cy.get('input[name="author"]').type(newBlog.author)
@@ -60,6 +60,15 @@ describe('Blog app', function() {
       cy.contains('create').click()
 
       cy.contains('This blog is added by test')
+    })
+
+    it('a blog can be liked', () => {
+      cy.addBlog(newBlog)
+      cy.contains('This blog is added by test')
+        .parent().contains('view').click()
+      cy.contains('This blog is added by test').parent().contains('Likes: 0')
+      cy.contains('This blog is added by test').parent().contains('like').click()
+      cy.contains('This blog is added by test').parent().contains('Likes: 1')
     })
   })
 })
